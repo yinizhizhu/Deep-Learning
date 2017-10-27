@@ -1,11 +1,45 @@
+import random, time
 import numpy as np
 import matplotlib.pyplot as plt
-#
+
+#####for the np.random.randn#####
 # a = np.random.randn(2,3)
 # print(a)
 # print(a.shape)
 #
+#####for the random.shuffle#####
+# a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+# print(a)
+# random.shuffle(a)
+# print(a)
+# random.shuffle(a)
+# print(a)
+# print(a[1:1+3])
+
+#####xrange(head, tail, gap)#####
+# for k in xrange(0, 10, 3):
+#     print k
+
+# a = [3, 1, 2, 4, 6, 1]
+# maxindex = 0
+# i = 0
+# for tmp in a:
+#     if tmp > a[maxindex]:
+#         maxindex = i
+#     i += 1
+# print(maxindex)
 #
+#####for the np.argmax#####
+# a = np.array([3, 1, 2, 4, 6, 1])
+# print(np.argmax(a))
+#
+# a = np.array([[1, 5, 5, 2],
+#               [9, 6, 2, 8],
+#               [3, 7, 9, 1]])
+# print(np.argmax(a, axis=0)) #axis - a[0][j]
+# print(np.argmax(a, axis=1)) #axis - a[j][0]
+
+#####for the np.dot#####
 # # 2-D array: 2 x 3
 # one = np.array([[1, 2, 3], [4, 5, 6]])
 # # 2-D array: 3 x 2
@@ -24,6 +58,7 @@ import mnist_loader
 
 training_data, validation_data, test_data = mnist_loader.load_data_wrapper()
 
+#####for the feedforward, sigmod#####
 # sizes = [784, 100, 10]
 # biases = [np.random.randn(y, 1) for y in sizes[1:]]
 # weights = [np.random.randn(y, x)
@@ -56,7 +91,28 @@ training_data, validation_data, test_data = mnist_loader.load_data_wrapper()
 # print(len(ans))
 # print(ans-score)
 
+# def evaluate1(test_data):
+#     test_results = [(np.argmax(feedforward(x)), y)
+#                     for (x, y) in test_data]
+#     return sum(int(x == y) for (x, y) in test_results)
+#
+# def evaluate2(test_data):
+#     counter = 0
+#     for (x, y) in test_data:
+#         if np.argmax(feedforward(x)) == y:
+#             counter += 1
+#     return counter
+#
+# s = time.time()
+# for i in xrange(10):
+#     evaluate1(test_data)
+# print "The running time is {0}" .format(time.time()-s)
+# s = time.time()
+# for i in xrange(10):
+#     evaluate2(test_data)
+# print "The running time is {0}" .format(time.time()-s)
+
 import network
 
 lee = network.Network([784, 100, 10])
-lee.SGD(training_data, 10, 10, 3.0, test_data)
+lee.SGD(training_data, 30, 10, 3.0, test_data)
