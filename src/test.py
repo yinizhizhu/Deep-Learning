@@ -114,5 +114,12 @@ training_data, validation_data, test_data = mnist_loader.load_data_wrapper()
 
 import network
 
-lee = network.Network([784, 100, 10])
-lee.SGD(training_data, 30, 10, 3.0, test_data)
+f = open('result.txt', 'w')
+print >> f, 'The Network with [{0}, {1}]\n'.format(784, 10)
+lee1 = network.Network([784, 10])
+lee1.SGD(f, training_data, 30, 10, 1.2, test_data)
+
+print >> f, 'The Network with [{0}, {1}, {2}]\n'.format(784, 30, 10)
+lee2 = network.Network([784, 30, 10])
+lee2.SGD(f, training_data, 30, 10, 1.2, test_data)
+f.close()
