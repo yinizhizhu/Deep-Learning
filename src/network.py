@@ -42,7 +42,7 @@ class Network(object):
             a = sigmoid(np.dot(w, a)+b)
         return a
 
-    def SGD(self, f, training_data, epochs, mini_batch_size, eta,
+    def SGD(self, training_data, epochs, mini_batch_size, eta,
             test_data=None):
         """Train the neural network using mini-batch stochastic
         gradient descent.  The ``training_data`` is a list of tuples
@@ -62,9 +62,11 @@ class Network(object):
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
             if test_data:
-                print >> f,  "Epoch {0}: {1} / {2}".format(j, self.evaluate(test_data), n_test)
+                print "Epoch {0}: {1} / {2}".format(j, self.evaluate(test_data), n_test)
+                # print >> f,  "Epoch {0}: {1} / {2}".format(j, self.evaluate(test_data), n_test)
             else:
-                print >> f, "Epoch {0} complete".format(j)
+                print "Epoch {0} complete".format(j)
+                # print >> f, "Epoch {0} complete".format(j)
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
@@ -99,8 +101,7 @@ class Network(object):
             activation = sigmoid(z)
             activations.append(activation)
         # backward pass
-        delta = self.cost_derivative(activations[-1], y) * \
-            sigmoid_prime(zs[-1])
+        delta = self.cost_derivative(activations[-1], y) * sigmoid_prime(zs[-1])
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activations[-2].transpose())
         # Note that the variable l in the loop below is used a little
@@ -134,8 +135,10 @@ class Network(object):
 #### Miscellaneous functions
 def sigmoid(z):
     """The sigmoid function."""
+    # return z
     return 1.0/(1.0+np.exp(-z))
 
 def sigmoid_prime(z):
     """Derivative of the sigmoid function."""
+    # return np.ones(z.shape)
     return sigmoid(z)*(1-sigmoid(z))

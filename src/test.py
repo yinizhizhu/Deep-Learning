@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # print(a)
 # print(a.shape)
 #
-#####for the random.shuffle#####
+####for the random.shuffle#####
 # a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 # print(a)
 # random.shuffle(a)
@@ -15,6 +15,13 @@ import matplotlib.pyplot as plt
 # random.shuffle(a)
 # print(a)
 # print(a[1:1+3])
+# for i in xrange(10):
+#     print '---{0}---'.format(i)
+#     print a[i:]
+#     print a[-i]
+#     print a[:-i]
+#     print
+
 
 #####xrange(head, tail, gap)#####
 # for k in xrange(0, 10, 3):
@@ -114,12 +121,12 @@ training_data, validation_data, test_data = mnist_loader.load_data_wrapper()
 
 import network
 
-f = open('result.txt', 'w')
-print >> f, 'The Network with [{0}, {1}]\n'.format(784, 10)
+# f = open('result.txt', 'w')
+# print >> f, 'The Network with [{0}, {1}]\n'.format(784, 10)
 lee1 = network.Network([784, 10])
-lee1.SGD(f, training_data, 30, 10, 1.2, test_data)
+lee1.SGD(training_data, 10, 10, 1.2, test_data)
 
-print >> f, 'The Network with [{0}, {1}, {2}]\n'.format(784, 30, 10)
+# print >> f, 'The Network with [{0}, {1}, {2}]\n'.format(784, 30, 10)
 lee2 = network.Network([784, 30, 10])
-lee2.SGD(f, training_data, 30, 10, 1.2, test_data)
-f.close()
+lee2.SGD(training_data, 10, 10, 1.2, test_data)
+# f.close()
