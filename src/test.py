@@ -123,7 +123,7 @@ import network
 
 # f = open('result.txt', 'w')
 # print >> f, 'The Network with [{0}, {1}]\n'.format(784, 10)
-lee1 = network.Network([784, 10])
+lee1 = network.Network([784, 100, 10])
 lee1.SGD(training_data, 10, 10, 1.2, test_data)
 
 # print >> f, 'The Network with [{0}, {1}, {2}]\n'.format(784, 30, 10)

@@ -17,7 +17,6 @@ import random
 import numpy as np
 
 class Network(object):
-
     def __init__(self, sizes):
         """The list ``sizes`` contains the number of neurons in the
         respective layers of the network.  For example, if the list
