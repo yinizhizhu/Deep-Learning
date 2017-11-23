@@ -13,13 +13,14 @@ features.
 
 #### Libraries
 # Standard library
+
 import json
 import random
 import sys
-
-# Third-party libraries
 import numpy as np
 
+from pycrayon import CrayonClient
+import time
 
 #### Define the quadratic and cross-entropy cost functions
 
@@ -83,6 +84,20 @@ class Network(object):
         self.default_weight_initializer()
         self.cost=cost
 
+        self.cc = CrayonClient(hostname="localhost", port=8889)
+        self.timeH = time.time()
+
+        self.cc.remove_experiment("train_accuracy")
+        self.cc.remove_experiment("train_loss")
+        self.cc.remove_experiment("test_accuracy")
+        self.cc.remove_experiment("test_loss")
+        self.trainA = self.cc.create_experiment("train_accuracy")
+        self.trainL = self.cc.create_experiment("train_loss")
+
+        self.testA = self.cc.create_experiment("test_accuracy")
+        self.testL = self.cc.create_experiment("test_loss")
+
+
     def default_weight_initializer(self):
         """Initialize each weight using a Gaussian distribution with mean 0
         and standard deviation 1 over the square root of the number of
@@ -129,10 +144,10 @@ class Network(object):
     def SGD(self, training_data, epochs, mini_batch_size, eta,
             lmbda = 0.0,
             evaluation_data=None,
-            monitor_evaluation_cost=False,
-            monitor_evaluation_accuracy=False,
-            monitor_training_cost=False,
-            monitor_training_accuracy=False):
+            monitor_evaluation_cost=True,
+            monitor_evaluation_accuracy=True,
+            monitor_training_cost=True,
+            monitor_training_accuracy=True):
         """Train the neural network using mini-batch stochastic gradient
         descent.  The ``training_data`` is a list of tuples ``(x, y)``
         representing the training inputs and the desired outputs.  The
@@ -165,24 +180,37 @@ class Network(object):
                 self.update_mini_batch(
                     mini_batch, eta, lmbda, len(training_data))
             print "Epoch %s training complete" % j
+
             if monitor_training_cost:
                 cost = self.total_cost(training_data, lmbda)
                 training_cost.append(cost)
                 print "Cost on training data: {}".format(cost)
+
+                self.trainL.add_scalar_value("train_loss", cost, time.time()-self.timeH)
+
             if monitor_training_accuracy:
                 accuracy = self.accuracy(training_data, convert=True)
                 training_accuracy.append(accuracy)
                 print "Accuracy on training data: {} / {}".format(
                     accuracy, n)
+
+                self.trainA.add_scalar_value("train_accuracy", accuracy, time.time()-self.timeH)
+
             if monitor_evaluation_cost:
                 cost = self.total_cost(evaluation_data, lmbda, convert=True)
                 evaluation_cost.append(cost)
                 print "Cost on evaluation data: {}".format(cost)
+
+                self.testL.add_scalar_value("test_loss", cost, time.time()-self.timeH)
+
             if monitor_evaluation_accuracy:
                 accuracy = self.accuracy(evaluation_data)
                 evaluation_accuracy.append(accuracy)
                 print "Accuracy on evaluation data: {} / {}".format(
                     self.accuracy(evaluation_data), n_data)
+
+                self.testA.add_scalar_value("test_accuracy", accuracy, time.time()-self.timeH)
+
             print
         return evaluation_cost, evaluation_accuracy, \
             training_cost, training_accuracy
@@ -296,6 +324,11 @@ class Network(object):
         f = open(filename, "w")
         json.dump(data, f)
         f.close()
+
+        # self.cc.remove_experiment("train_accuracy")
+        # self.cc.remove_experiment("train_loss")
+        # self.cc.remove_experiment("test_accuracy")
+        # self.cc.remove_experiment("test_loss")
 
 #### Loading a Network
 def load(filename):
